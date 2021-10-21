@@ -5,10 +5,12 @@ export interface Diagnose {
 };
 
 export interface Patient {
-    id: number,
+    id: string,
     name: string,
     dateOfBirth: string,
-    ssn: number,
+    ssn: string,
     gender: string,
     occupation: string
 };
+
+// export type nonSensitivePatient = Omit<Patient, 'ssn'>
