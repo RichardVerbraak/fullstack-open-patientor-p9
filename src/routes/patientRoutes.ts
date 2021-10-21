@@ -1,9 +1,11 @@
 import express from 'express';
+import { getNonSensitivePatient } from '../services/patientService';
 
 const router = express.Router();
 
 router.get('/', (_req, res) => {
-   res.send('Fetching patients');
+   const nonSensitivePatientData = getNonSensitivePatient()
+   res.send(nonSensitivePatientData);
 });
 
 
