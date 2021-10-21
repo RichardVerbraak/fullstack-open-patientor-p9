@@ -1,6 +1,6 @@
 import express from 'express';
-import diagnoseRouter from './routes/diagnoseRoutes';
 import patientRouter from './routes/patientRoutes';
+import diagnoseRouter from './routes/diagnoseRoutes';
 
 const app = express();
 
