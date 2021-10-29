@@ -6,7 +6,7 @@ const parseNewPatient = (patientData: any) : newPatient => {
     const parsedPatient = {
         name: parseString(name),
         dateOfBirth: parseDate(dateOfBirth),
-        ssn,
+        ssn: parseSSN(ssn),
         gender,
         occupation
     }
@@ -20,7 +20,7 @@ const isString = ((name: unknown) : name is string => {
 
 const parseString = ((name: unknown) : string => {
     if(!name || !isString(name)) {
-        throw new Error(`Missing name or invalid data`)
+        throw new Error(`Missing name or invalid data -- ${name}`)
     }
 
     return name
@@ -33,10 +33,18 @@ const isDate = (date: string) : boolean => {
 // isString operation runs first so that's why isDate can take the date in as string since it comes AFTER parsing for a string
 const parseDate = (date: unknown) : string => {
     if(!date || !isString(date) || !isDate(date)) {
-        throw new Error(`Missing date or invalid data`)
+        throw new Error(`Missing date or invalid data -- ${date}`)
     }
 
     return date
+}
+
+const parseSSN = (ssn: unknown) : string => {
+    if(!ssn || !isString(ssn)) {
+        throw new Error(`Missing ssn or invalid data -- ${ssn}`)
+    }
+
+    return ssn
 }
 
 export { parseNewPatient }
