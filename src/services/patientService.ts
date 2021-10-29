@@ -1,5 +1,7 @@
 import patientData from '../../data/patients.json'
-import { Patient, nonSensitivePatient } from '../types';
+import { Patient, nonSensitivePatient, newPatient } from '../types';
+import {v1 as uuid} from 'uuid';
+
 
 
 const getPatients = (): Array<Patient> => {
@@ -18,5 +20,18 @@ const getNonSensitivePatient = (): nonSensitivePatient[] => {
     });
 };
 
-export { getPatients, getNonSensitivePatient }
+// Adds patient to patient data
+// The newPatient type is made to accept the data from the body (which comes without an ID)
+const addNewPatient = (patient: newPatient) : Patient => {
+    const newPatient = {
+        id: uuid(),
+        ...patient
+    };
+
+    patientData.push(newPatient)
+
+    return newPatient
+};
+
+export { getPatients, getNonSensitivePatient, addNewPatient }
 
