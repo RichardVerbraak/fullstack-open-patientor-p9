@@ -1,3 +1,4 @@
+import { Gender } from "../patientor/src/types";
 import { newPatient } from "./types"
 
 const parseNewPatient = (patientData: any) : newPatient => {
@@ -7,7 +8,7 @@ const parseNewPatient = (patientData: any) : newPatient => {
         name: parseString(name),
         dateOfBirth: parseDate(dateOfBirth),
         ssn: parseSSN(ssn),
-        gender,
+        gender: parseGender(gender),
         occupation
     }
 
@@ -45,6 +46,18 @@ const parseSSN = (ssn: unknown) : string => {
     }
 
     return ssn
+}
+
+const isGender = (gender: any) : gender is Gender => {
+    return Object.values(Gender).includes(gender)
+}
+
+const parseGender = (gender: unknown) : Gender => {
+    if(!gender || !isGender) {
+        throw new Error(`Missing gender or invalid data -- ${gender}`)
+    }
+
+    return gender
 }
 
 export { parseNewPatient }
