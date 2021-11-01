@@ -14,8 +14,12 @@ router.get('/', (_req, res) => {
 router.post('/', (req, res) => {
    const {name, dateOfBirth, ssn, gender, occupation} = req.body
 
+   console.log(req.body)
+
+   // Parse body contents
    const parsedPatient = parseNewPatient({name, dateOfBirth, ssn, gender, occupation})
 
+   // Add patient to the hardcoded data with random unique id
    const newPatient = addNewPatient(parsedPatient)
 
    res.send(newPatient)

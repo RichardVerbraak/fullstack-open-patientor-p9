@@ -12,7 +12,7 @@ const parseNewPatient = (patientData: any) : newPatient => {
         occupation: parseOccupation(occupation)
     }
 
-    return parsedPatient;
+    return parsedPatient as newPatient
 }
 
 const isString = ((name: unknown) : name is string => {
@@ -53,7 +53,7 @@ const parseSSN = (ssn: unknown) : string => {
 }
 
 const parseGender = (gender: any) : Gender => {
-    if(!gender || !isGender) {
+    if(!gender || !isGender(gender)) {
         throw new Error(`Missing gender or invalid data -- ${gender}`)
     }
 
