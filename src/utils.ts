@@ -1,4 +1,4 @@
-import { Gender } from "../patientor/src/types";
+import { Gender } from './types'
 import { newPatient } from "./types"
 
 const parseNewPatient = (patientData: any) : newPatient => {
@@ -12,6 +12,7 @@ const parseNewPatient = (patientData: any) : newPatient => {
         occupation: parseOccupation(occupation)
     }
 
+    // Tell compiler the fully parsed patient object conforms to the newPatient interface
     return parsedPatient as newPatient
 }
 
