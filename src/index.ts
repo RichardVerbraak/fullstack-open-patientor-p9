@@ -1,12 +1,12 @@
 import express from 'express';
-import cors from 'cors'
+import cors from 'cors';
 import patientRouter from './routes/patientRoutes';
 import diagnoseRouter from './routes/diagnoseRoutes';
 
 const app = express();
 
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 
 app.get('/api/ping', (_req, res) => {
     console.log('pinged');

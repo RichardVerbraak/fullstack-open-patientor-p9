@@ -6,24 +6,34 @@ const router = express.Router();
 
 // Get patients without ssn field
 router.get('/', (_req, res) => {
-   const nonSensitivePatientData = getNonSensitivePatient()
+   const nonSensitivePatientData = getNonSensitivePatient();
    res.send(nonSensitivePatientData);
 });
 
 // Post patient which gets parsed and returned
 router.post('/', (req, res) => {
-   const {name, dateOfBirth, ssn, gender, occupation} = req.body
+   try {
+      // Parse body content
+      const parsedPatient = parseNewPatient(req.body);
 
-   console.log(req.body)
+      // Add patient to the hardcoded data with random unique id
+      const newPatient = addNewPatient(parsedPatient);
 
-   // Parse body contents
-   const parsedPatient = parseNewPatient({name, dateOfBirth, ssn, gender, occupation})
+      res.status(200);
+      res.send(newPatient);
+   } catch (error) {
+      const basicErrorMessage = 'Something went wrong';
 
-   // Add patient to the hardcoded data with random unique id
-   const newPatient = addNewPatient(parsedPatient)
+        if(error instanceof Error) {
+          const fullErrorMessage = `${basicErrorMessage}, Error: ${error.message}`;
+          res.status(400);
+          res.send(fullErrorMessage);
+        }
 
-   res.send(newPatient)
+        res.status(400);
+        res.send(basicErrorMessage);
+   }  
 });
 
 
-export default router
+export default router;
