@@ -12,9 +12,13 @@ import { useStateValue } from '../state'
 const PatientListPage = () => {
 	const [{ patients }, dispatch] = useStateValue()
 
+	// The <> are Type Parameters, this means these functions from useState only accept said paramets like a boolean for the modal
+	// or a string or leaving it undefined for the error
+	// The exact type that for example, setModalOpen receives is of <React.setStateAction<boolean>>
 	const [modalOpen, setModalOpen] = React.useState<boolean>(false)
 	const [error, setError] = React.useState<string | undefined>()
 
+	// Helper functions for the modal
 	const openModal = (): void => setModalOpen(true)
 
 	const closeModal = (): void => {
