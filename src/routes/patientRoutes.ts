@@ -10,6 +10,11 @@ router.get('/', (_req, res) => {
    res.send(nonSensitivePatientData);
 });
 
+// Returns all info of one patient (including the entries)
+router.get('/:id', (req, res) => {
+
+})
+
 // Post patient which gets parsed and returned
 router.post('/', (req, res) => {
    try {
