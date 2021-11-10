@@ -43,4 +43,8 @@ export const StateProvider: React.FC<StateProviderProps> = ({
 		</StateContext.Provider>
 	)
 }
+
+// useStateValue is made as a hook to always pull the context from this state
+// I personally would've named this to usePatientState for clarification when you might end up using multiple states
+// or just rename the StateContext to PatientContext to use at like this: const [{patients}, dispatch] = useContext(PatientContext)
 export const useStateValue = () => useContext(StateContext)
