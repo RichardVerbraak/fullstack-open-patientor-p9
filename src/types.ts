@@ -10,11 +10,9 @@ export interface Diagnose {
     latin?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Entry {
-    description: string,
-    creationDate: string,
-    specialist: string,
-    diagnosisCode: string
+    
 }
 
 export interface Patient {

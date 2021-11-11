@@ -1,5 +1,5 @@
 import express from 'express';
-import { getNonSensitivePatient, addNewPatient } from '../services/patientService';
+import { getNonSensitivePatient, getSinglePatient, addNewPatient } from '../services/patientService';
 import { parseNewPatient } from '../utils';
 
 const router = express.Router();
@@ -12,7 +12,21 @@ router.get('/', (_req, res) => {
 
 // Returns all info of one patient (including the entries)
 router.get('/:id', (req, res) => {
+   const id = req.params.id
 
+   try {
+      const foundPatient = getSinglePatient(id)
+
+      res.status(200)
+      res.send(foundPatient)
+   } catch (error) {
+      res.status(404)
+      res.send(`No user with ID ${id} exists`)
+   }
+
+   
+
+   
 })
 
 // Post patient which gets parsed and returned

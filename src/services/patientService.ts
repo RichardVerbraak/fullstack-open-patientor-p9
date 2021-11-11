@@ -23,7 +23,8 @@ const getNonSensitivePatient = (): nonSensitivePatient[] => {
             name,
             dateOfBirth,
             gender,
-            occupation
+            occupation,
+            entries: []
         };
     });
 };
@@ -33,6 +34,7 @@ const getNonSensitivePatient = (): nonSensitivePatient[] => {
 const addNewPatient = (patient: newPatient) : Patient => {
     const newPatient = {
         id: uuid(),
+        entries: [],
         ...patient
     };
 
