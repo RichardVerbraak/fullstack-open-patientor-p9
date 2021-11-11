@@ -52,8 +52,6 @@ const patientData = [
 const patients : Patient[] = patientData.map((patientObj) => {
   const patient = parseNewPatient(patientObj) as Patient
   
-  console.log('patient from data', patient)
-
   patient.entries = []  
 
   return patient
