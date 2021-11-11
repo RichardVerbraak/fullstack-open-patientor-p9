@@ -11,8 +11,7 @@ export interface Diagnose {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Entry {
-    
+export interface Entry {    
 }
 
 export interface Patient {
@@ -25,13 +24,8 @@ export interface Patient {
     entries: Entry[]
 }
 
-export interface newPatient { 
-    name: string,
-    dateOfBirth: string,
-    ssn: string,
-    gender: Gender,
-    occupation: string
-}
+// Could also be used when parsing a new patient in the parsePatient utils function
+export type newPatient = Omit<Patient, 'id'>
 
 export type PublicPatient = Omit<Patient, 'ssn' | 'entries'>
 

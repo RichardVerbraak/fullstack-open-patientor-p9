@@ -1,4 +1,5 @@
 import { Patient } from "../src/types"
+import { parseNewPatient } from "../src/utils"
 
 const patientData = [
     {
@@ -46,6 +47,16 @@ const patientData = [
 // Tell the compiler the data conforms to the patient type
 // This is because the compiler throws an error about the gender propery which it infers as a string and not of type Gender --
 // but we assured it is of said type with the 'as' keyword
-const patients : Patient[] = patientData as Patient[]
+// const patients : Patient[] = patientData as Patient[]
+
+const patients : Patient[] = patientData.map((patientObj) => {
+  const patient = parseNewPatient(patientObj) as Patient
+  
+  console.log('patient from data', patient)
+
+  patient.entries = []  
+
+  return patient
+})
 
 export default patients

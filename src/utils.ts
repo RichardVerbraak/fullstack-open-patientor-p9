@@ -1,22 +1,24 @@
-import { Gender } from './types';
-import { newPatient } from "./types";
+import { Gender, Patient } from './types';
+import {v1 as uuid} from 'uuid';
 
 // Will throw up error about unsafe-argument because Req.body aka Req being of any type
 // This was not explained in the course...
-type PatientFields = { name: unknown, dateOfBirth: unknown, ssn: unknown, gender: unknown, occupation: unknown };
+type PatientFields = { name: unknown, dateOfBirth: unknown, ssn: unknown, gender: unknown, occupation: unknown, id: string };
 
 // Destructures the unknown types from PatientFields type
-const parseNewPatient = ({name, dateOfBirth, ssn, gender, occupation} : PatientFields) : newPatient => {
+const parseNewPatient = ({name, dateOfBirth, ssn, gender, occupation, id} : PatientFields) : Patient => {
+    // Add random ID if there is none (this is done because we also parse all of the hardcoded data with this function)
     const parsedPatient = {
+        id: id ? id : uuid(),
         name: parseString(name),
         dateOfBirth: parseDate(dateOfBirth),
         ssn: parseSSN(ssn),
         gender: parseGender(gender),
-        occupation: parseOccupation(occupation)
+        occupation: parseOccupation(occupation),
+        entries: []
     };
-
-    // Tell compiler the fully parsed patient object conforms to the newPatient interface
-    return parsedPatient as newPatient;
+    
+    return parsedPatient
 };
 
 const isString = ((name: unknown) : name is string => {

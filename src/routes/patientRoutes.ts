@@ -22,11 +22,7 @@ router.get('/:id', (req, res) => {
    } catch (error) {
       res.status(404)
       res.send(`No user with ID ${id} exists`)
-   }
-
-   
-
-   
+   }   
 })
 
 // Post patient which gets parsed and returned
