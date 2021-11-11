@@ -7,11 +7,14 @@ import { Action } from './reducer'
 // Defining state like this means you won't misuse the state since it will now conform to only these types
 export type State = {
 	patients: { [id: string]: Patient }
+	patient: Patient
 }
 
 // InitialState that will conform to the defined state
+//!!! Used assertion for now
 const initialState: State = {
 	patients: {},
+	patient: {} as Patient,
 }
 
 // createContext which comes with a Provider component which takes in a value of the State and Dispatch actions

@@ -11,7 +11,7 @@ export type Action =
 			payload: Patient
 	  }
 	| {
-			type: 'FETCH_PATIENT'
+			type: 'SET_SINGLE_PATIENT'
 			payload: Patient
 	  }
 
@@ -39,6 +39,12 @@ export const reducer = (state: State, action: Action): State => {
 					[action.payload.id]: action.payload,
 				},
 			}
+		case 'SET_SINGLE_PATIENT':
+			return {
+				...state,
+				patient: action.payload,
+			}
+
 		default:
 			return state
 	}
