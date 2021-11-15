@@ -9,6 +9,7 @@ import { Patient } from '../types'
 import { Icon } from 'semantic-ui-react'
 
 const PatientPage = () => {
+	// Tell the param is an object with an id of string
 	const { id } = useParams<{ id: string }>()
 	const [{ patient }, dispatch] = useStateValue()
 
@@ -19,8 +20,11 @@ const PatientPage = () => {
 	}
 
 	useEffect(() => {
-		// Void because there is no return type
-		void fetchPatient()
+		// Only fetch when URL param (id) doesn't match that of the patient
+		if (id !== patient.id) {
+			// Void because there is no return type
+			void fetchPatient()
+		}
 	}, [])
 
 	return (
