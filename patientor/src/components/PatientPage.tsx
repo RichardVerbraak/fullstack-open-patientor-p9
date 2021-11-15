@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 
 import { useParams } from 'react-router'
 import { apiBaseUrl } from '../constants'
-import { useStateValue } from '../state'
+import { setSinglePatient, useStateValue } from '../state'
 
 import { Patient } from '../types'
 import { Icon } from 'semantic-ui-react'
@@ -16,7 +16,7 @@ const PatientPage = () => {
 	const fetchPatient = async () => {
 		const { data } = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`)
 
-		dispatch({ type: 'SET_SINGLE_PATIENT', payload: data })
+		dispatch(setSinglePatient(data))
 	}
 
 	useEffect(() => {
