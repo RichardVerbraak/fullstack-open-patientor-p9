@@ -1,7 +1,7 @@
 import React from 'react'
 import { Entry } from '../types'
 
-const PatientEntry: React.FC<Entry> = (entry: Entry) => {
+const PatientEntry = (entry: Entry) => {
 	return (
 		<div>
 			<p>

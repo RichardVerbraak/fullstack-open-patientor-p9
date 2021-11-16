@@ -5,10 +5,14 @@ import { useParams } from 'react-router'
 import { apiBaseUrl } from '../constants'
 import { setSinglePatient, useStateValue } from '../state'
 
-import { Entry, Patient } from '../types'
+import { Patient } from '../types'
 import { Icon } from 'semantic-ui-react'
 import PatientEntry from './PatientEntry'
 
+// Entry is passed in as a destructured object as prop instead of 'entry={etry}'
+// This is because of the 'entry does not exist on IntrinsicAttributes warning'
+// https://stackoverflow.com/questions/59969756/not-assignable-to-type-intrinsicattributes-intrinsicclassattributes-react-js
+// Short answer is because TS expects the entry to exist and not be undefined or null, destructuring it says 'this exists' to TS
 const PatientPage = () => {
 	// Tell the param is an object with an id of string
 	const { id } = useParams<{ id: string }>()
@@ -51,7 +55,7 @@ const PatientPage = () => {
 				<h3>Entries</h3>
 				{patient.entries &&
 					patient.entries.map((entry) => {
-						return <PatientEntry key={entry.id} {...entry} />
+						return <PatientEntry key={entry.id} entry={...entry} />
 					})}
 			</div>
 		</div>
