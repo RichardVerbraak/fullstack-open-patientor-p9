@@ -48,6 +48,18 @@ export interface HospitalEntry extends BaseEntry {
 	}
 }
 
+// https://stackoverflow.com/questions/51651499/typescript-what-is-a-naked-type-parameter
+// Define special omit for unions
+
+// This takes in a Type (T)
+// Where the keys of said Type (K) are of subtype string, number and symbol since Objects can only have keys of type string number and symbol
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown
+	? Omit<T, K>
+	: never
+
+// Define Entry without the 'id' property
+type EntryWithoutId = UnionOmit<Entry, 'id'>
+
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export type Entry =
 	| HealthCheckEntry

@@ -1,7 +1,10 @@
 import React from 'react'
+// import { useStateValue } from '../state'
 import { Entry } from '../types'
 
 const PatientEntry = (entry: Entry) => {
+	// const [{ diagnoses }] = useStateValue()
+
 	return (
 		<div>
 			<p>
@@ -15,5 +18,12 @@ const PatientEntry = (entry: Entry) => {
 		</div>
 	)
 }
+// {entry.diagnosisCodes?.map((code) => {
+// 					console.log(
+// 						diagnoses.filter((diagnose) => {
+// 							return diagnose.code === code
+// 						})
+// 					)
+// 				})}
 
 export default PatientEntry

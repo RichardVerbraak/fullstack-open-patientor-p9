@@ -16,7 +16,9 @@ import PatientEntry from './PatientEntry'
 const PatientPage = () => {
 	// Tell the param is an object with an id of string
 	const { id } = useParams<{ id: string }>()
-	const [{ patient }, dispatch] = useStateValue()
+	const [{ patient, diagnoses }, dispatch] = useStateValue()
+
+	console.log(diagnoses)
 
 	const fetchPatient = async () => {
 		const { data } = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`)

@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios'
 import { Container, Table, Button } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
 import { PatientFormValues } from '../AddPatientModal/AddPatientForm'
 import AddPatientModal from '../AddPatientModal'
-import { Patient } from '../types'
+import { Diagnosis, Patient } from '../types'
 import { apiBaseUrl } from '../constants'
 import HealthRatingBar from '../components/HealthRatingBar'
-import { addPatient, useStateValue } from '../state'
+import { addPatient, setDiagnoses, useStateValue } from '../state'
 
 const PatientListPage = () => {
 	const [{ patients }, dispatch] = useStateValue()
@@ -41,6 +41,16 @@ const PatientListPage = () => {
 			setError(e.response?.data?.error || 'Unknown error')
 		}
 	}
+
+	const fetchDiagnoses = async () => {
+		const { data } = await axios.get<Diagnosis[]>(`${apiBaseUrl}/diagnoses`)
+
+		dispatch(setDiagnoses(data))
+	}
+
+	useEffect(() => {
+		void fetchDiagnoses()
+	}, [])
 
 	return (
 		<div className='App'>

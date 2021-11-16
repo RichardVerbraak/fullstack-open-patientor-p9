@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react'
-import { Patient } from '../types'
+import { Diagnosis, Patient } from '../types'
 
 import { Action } from './reducer'
 
@@ -8,6 +8,7 @@ import { Action } from './reducer'
 export type State = {
 	patients: { [id: string]: Patient }
 	patient: Patient
+	diagnoses: Diagnosis[]
 }
 
 // InitialState that will conform to the defined state
@@ -15,6 +16,7 @@ export type State = {
 const initialState: State = {
 	patients: {},
 	patient: {} as Patient,
+	diagnoses: [],
 }
 
 // createContext which comes with a Provider component which takes in a value of the State and Dispatch actions
