@@ -53,6 +53,8 @@ export interface HospitalEntry extends BaseEntry {
 
 // This takes in a Type (T)
 // Where the keys of said Type (K) are of subtype string, number and symbol since Objects can only have keys of type string number and symbol
+// The condition is: if the Type is assignable to unknown which always results in true
+// Then it would Omit every said key (K) from every Type (Entry being a union type in this example)
 type UnionOmit<T, K extends string | number | symbol> = T extends unknown
 	? Omit<T, K>
 	: never
