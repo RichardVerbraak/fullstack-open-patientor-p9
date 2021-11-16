@@ -5,8 +5,9 @@ import { useParams } from 'react-router'
 import { apiBaseUrl } from '../constants'
 import { setSinglePatient, useStateValue } from '../state'
 
-import { Patient } from '../types'
+import { Entry, Patient } from '../types'
 import { Icon } from 'semantic-ui-react'
+import PatientEntry from './PatientEntry'
 
 const PatientPage = () => {
 	// Tell the param is an object with an id of string
@@ -46,6 +47,13 @@ const PatientPage = () => {
 
 			<p>ssn: {patient.ssn}</p>
 			<p>occupation: {patient.occupation}</p>
+			<div>
+				<h3>Entries</h3>
+				{patient.entries &&
+					patient.entries.map((entry) => {
+						return <PatientEntry key={entry.id} {...entry} />
+					})}
+			</div>
 		</div>
 	)
 }
