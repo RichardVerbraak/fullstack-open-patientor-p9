@@ -10,12 +10,26 @@ export interface Diagnosis {
 	latin?: string
 }
 
+// Created a base since most fields are the same in each entry except for 3~ fields
 export interface BaseEntry {
 	id: string
 	description: string
 	date: string
 	specialist: string
 	diagnosisCodes?: Array<Diagnosis['code']>
+}
+
+// Using an enum since the rating ranges from 0 to 3
+export enum HealthCheckRating {
+	'Healthy' = 0,
+	'LowRisk' = 1,
+	'HighRisk' = 2,
+	'CriticalRisk' = 3,
+}
+
+export interface HealthCheckEntry extends BaseEntry {
+	type: 'HealthCheck'
+	healthCheckRating: HealthCheckRating
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
