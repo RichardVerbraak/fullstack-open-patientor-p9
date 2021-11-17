@@ -13,12 +13,12 @@ import PatientEntry from './PatientEntry'
 // This is because of the 'entry is not assignable to IntrinsicAttributes warning'
 // https://stackoverflow.com/questions/59969756/not-assignable-to-type-intrinsicattributes-intrinsicclassattributes-react-js
 // Short answer is because TS expects the entry to exist and not be undefined or null, destructuring it says 'this exists' to TS
+
+// Checking for patient.entries and the for patient.entries.length in order to render 'No entries' when the patient entries array is empty
 const PatientPage = () => {
 	// Tell the param is an object with an id of string
 	const { id } = useParams<{ id: string }>()
-	const [{ patient, diagnoses }, dispatch] = useStateValue()
-
-	console.log(diagnoses)
+	const [{ patient }, dispatch] = useStateValue()
 
 	const fetchPatient = async () => {
 		const { data } = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`)
@@ -55,10 +55,13 @@ const PatientPage = () => {
 			<p>occupation: {patient.occupation}</p>
 			<div>
 				<h3>Entries</h3>
-				{patient.entries &&
+				{patient.entries && patient.entries.length ? (
 					patient.entries.map((entry) => {
 						return <PatientEntry key={entry.id} {...entry} />
-					})}
+					})
+				) : (
+					<div>No entries</div>
+				)}
 			</div>
 		</div>
 	)

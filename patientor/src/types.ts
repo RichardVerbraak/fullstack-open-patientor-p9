@@ -55,12 +55,13 @@ export interface HospitalEntry extends BaseEntry {
 // Where the keys of said Type (K) are of subtype string, number and symbol since Objects can only have keys of type string number and symbol
 // The condition is: if the Type is assignable to unknown which always results in true
 // Then it would Omit every said key (K) from every Type (Entry being a union type in this example)
-type UnionOmit<T, K extends string | number | symbol> = T extends unknown
-	? Omit<T, K>
-	: never
+// If you do a ternary on a type with generics like below, every union element is tested separately
+// type UnionOmit<T, K extends string | number | symbol> = T extends unknown
+// 	? Omit<T, K>
+// 	: never
 
 // Define Entry without the 'id' property
-type EntryWithoutId = UnionOmit<Entry, 'id'>
+// type EntryWithoutId = UnionOmit<Entry, 'id'>
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export type Entry =

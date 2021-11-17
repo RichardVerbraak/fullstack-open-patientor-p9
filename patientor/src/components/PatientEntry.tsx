@@ -1,9 +1,21 @@
-import React from 'react'
-// import { useStateValue } from '../state'
-import { Entry } from '../types'
+import axios from 'axios'
+import React, { useEffect } from 'react'
+import { apiBaseUrl } from '../constants'
+import { setDiagnoses, useStateValue } from '../state'
+import { Diagnosis, Entry } from '../types'
 
 const PatientEntry = (entry: Entry) => {
-	// const [{ diagnoses }] = useStateValue()
+	const [{ diagnoses }, dispatch] = useStateValue()
+
+	const fetchDiagnoses = async () => {
+		const { data } = await axios.get<Diagnosis[]>(`${apiBaseUrl}/diagnoses`)
+
+		dispatch(setDiagnoses(data))
+	}
+
+	useEffect(() => {
+		void fetchDiagnoses()
+	}, [])
 
 	return (
 		<div>
@@ -12,7 +24,17 @@ const PatientEntry = (entry: Entry) => {
 			</p>
 			<ul>
 				{entry.diagnosisCodes?.map((code) => {
-					return <li key={code}>{code}</li>
+					return diagnoses
+						.filter((diagnose) => {
+							return code === diagnose.code
+						})
+						.map((entry) => {
+							return (
+								<li key={entry.code}>
+									{entry.code} <span>{entry.name}</span>
+								</li>
+							)
+						})
 				})}
 			</ul>
 		</div>
