@@ -17,35 +17,35 @@ const PatientEntry = (entry: Entry) => {
 		void fetchDiagnoses()
 	}, [])
 
+	// Create an array of diagnose codes by using .find in diagnoses to find the same code and return the found diagnose object
+	// Find always returns Type | undefined and because of such the key of the list item will be bugged
+	// No clue how to fix
+	const diagnosisCodes = entry.diagnosisCodes?.map(
+		(code): Diagnosis | undefined => {
+			const sameCodeAsPatient = diagnoses.find((diagnose) => {
+				return diagnose.code === code
+			})
+
+			return sameCodeAsPatient
+		}
+	)
+
 	return (
 		<div>
 			<p>
 				{entry.date} <span>{entry.description}</span>
 			</p>
 			<ul>
-				{entry.diagnosisCodes?.map((code) => {
-					return diagnoses
-						.filter((diagnose) => {
-							return code === diagnose.code
-						})
-						.map((entry) => {
-							return (
-								<li key={entry.code}>
-									{entry.code} <span>{entry.name}</span>
-								</li>
-							)
-						})
+				{diagnosisCodes?.map((diagnoseObj): React.ReactElement<Diagnosis> => {
+					return (
+						<li key={diagnoseObj?.code}>
+							{diagnoseObj?.code} <span>{diagnoseObj?.name}</span>
+						</li>
+					)
 				})}
 			</ul>
 		</div>
 	)
 }
-// {entry.diagnosisCodes?.map((code) => {
-// 					console.log(
-// 						diagnoses.filter((diagnose) => {
-// 							return diagnose.code === code
-// 						})
-// 					)
-// 				})}
 
 export default PatientEntry

@@ -55,7 +55,7 @@ const PatientPage = () => {
 			<p>occupation: {patient.occupation}</p>
 			<div>
 				<h3>Entries</h3>
-				{patient.entries && patient.entries.length ? (
+				{patient && patient.entries && patient.entries.length ? (
 					patient.entries.map((entry) => {
 						return <PatientEntry key={entry.id} {...entry} />
 					})
