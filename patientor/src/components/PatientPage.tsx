@@ -7,7 +7,7 @@ import { setSinglePatient, useStateValue } from '../state'
 
 import { Patient } from '../types'
 import { Icon } from 'semantic-ui-react'
-import PatientEntry from './PatientEntry'
+import EntryDetails from './EntryDetails'
 
 // Entry is passed in as a destructured object as prop instead of 'entry={etry}'
 // This is because of the 'entry is not assignable to IntrinsicAttributes warning'
@@ -57,7 +57,7 @@ const PatientPage = () => {
 				<h3>Entries</h3>
 				{patient && patient.entries && patient.entries.length ? (
 					patient.entries.map((entry) => {
-						return <PatientEntry key={entry.id} {...entry} />
+						return <EntryDetails key={entry.id} entry={entry} />
 					})
 				) : (
 					<div>No entries</div>
