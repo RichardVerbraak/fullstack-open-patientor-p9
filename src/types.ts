@@ -55,6 +55,23 @@ export type Entry =
 	| OccupationalHealthCareEntry
 	| HospitalEntry
 
+// https://stackoverflow.com/questions/51651499/typescript-what-is-a-naked-type-parameter
+// Define special omit for unions
+
+// This takes in a Type (T)
+// Where the keys of said Type (K) are of subtype string, number and symbol since Objects can only have keys of type string number and symbol
+// The condition is: if the Type is assignable to unknown which always results in true
+// Then it would Omit every said key (K) from every Type (Entry being a union type in this example)
+// If you do a ternary on a type with generics like below, every union element is tested separately
+
+// Distributive type that will Omit a key from every union member
+type OmitFromUnion<T, K extends string | number | symbol> = T extends unknown
+	? Omit<T, K>
+	: never
+
+// New entries don't have an ID and is added in the backend later
+export type newEntry = OmitFromUnion<Entry, 'id'>
+
 export interface Patient {
 	id: string
 	name: string
