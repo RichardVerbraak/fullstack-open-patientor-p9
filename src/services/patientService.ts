@@ -15,6 +15,7 @@ const getSinglePatient = (id: string): Patient => {
 	return foundPatient as Patient
 }
 
+// Returns the patient without the SSN field by mapping over the array and creating an array of objects without said property
 const getNonSensitivePatient = (): nonSensitivePatient[] => {
 	return patients.map(({ id, name, dateOfBirth, gender, occupation }) => {
 		return {
