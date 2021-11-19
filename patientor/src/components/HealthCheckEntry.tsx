@@ -15,6 +15,13 @@ const HealthCheck: React.FC<{ entry: HealthCheckEntry }> = ({ entry }) => {
 				{entry.diagnosisCodes && (
 					<DiagnosesList diagnoseCodes={entry.diagnosisCodes} />
 				)}
+				{entry.healthCheckRating === 0 ? (
+					<Icon name='heart' color='green' />
+				) : entry.healthCheckRating === 1 || entry.healthCheckRating === 2 ? (
+					<Icon name='heart' color='yellow' />
+				) : (
+					<Icon name='heart' color='red' />
+				)}
 			</Card.Content>
 		</Card>
 	)
