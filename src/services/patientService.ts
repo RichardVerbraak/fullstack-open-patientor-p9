@@ -1,5 +1,5 @@
 import patients from '../../data/patients'
-import { Patient, nonSensitivePatient } from '../types'
+import { Patient, nonSensitivePatient, Entry } from '../types'
 
 // Get all patients
 const getPatients = (): Patient[] => {
@@ -37,4 +37,23 @@ const addNewPatient = (patient: Patient): Patient => {
 	return patient
 }
 
-export { getPatients, getSinglePatient, getNonSensitivePatient, addNewPatient }
+// Find patient => add entry => return the entry
+const addNewEntry = (id: string, entry: Entry): Entry => {
+	const foundPatient = patients.find((patient) => {
+		return patient.id === id
+	})
+
+	if (foundPatient) {
+		foundPatient.entries.push(entry)
+	}
+
+	return entry
+}
+
+export {
+	getPatients,
+	getSinglePatient,
+	getNonSensitivePatient,
+	addNewPatient,
+	addNewEntry,
+}

@@ -3,8 +3,10 @@ import {
 	getNonSensitivePatient,
 	getSinglePatient,
 	addNewPatient,
+	addNewEntry,
 } from '../services/patientService'
-import { parseNewPatient } from '../utils'
+import { parseNewEntry } from '../utils/entryUtils'
+import { parseNewPatient } from '../utils/patientUtils'
 
 const router = express.Router()
 
@@ -43,6 +45,33 @@ router.post('/', (req, res) => {
 
 		res.status(200)
 		res.send(newPatient)
+	} catch (error) {
+		const basicErrorMessage = 'Something went wrong'
+
+		if (error instanceof Error) {
+			const fullErrorMessage = `${basicErrorMessage}, Error: ${error.message}`
+			res.status(400)
+			res.send(fullErrorMessage)
+		}
+
+		res.status(400)
+		res.send(basicErrorMessage)
+	}
+})
+
+//  @desc    Add an entry to a patient
+//  @route   POST /api/patients/:id/entries
+router.get('/:id/entries', (req, res) => {
+	try {
+		const patientID = req.params.id
+
+		// Parse the entry to check if the required fields are present for each entry
+		const parsedEntry = parseNewEntry(req.body)
+
+		// Add the parsed entry to said patient
+		const newEntry = addNewEntry(patientID, parsedEntry)
+
+		// Return the updated patient or entry?
 	} catch (error) {
 		const basicErrorMessage = 'Something went wrong'
 

@@ -1,0 +1,3 @@
+const parseNewEntry = () => {}
+
+export { parseNewEntry }
