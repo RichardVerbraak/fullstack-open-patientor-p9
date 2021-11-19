@@ -3,7 +3,7 @@ import {
 	getNonSensitivePatient,
 	getSinglePatient,
 	addNewPatient,
-	addNewEntry,
+	// addNewEntry,
 } from '../services/patientService'
 import { parseNewEntry } from '../utils/entryUtils'
 import { parseNewPatient } from '../utils/patientUtils'
@@ -33,18 +33,21 @@ router.get('/:id', (req, res) => {
 	}
 })
 
-//  @desc    Add a new patient
-//  @route   POST /api/patients
-router.post('/', (req, res) => {
+//  @desc    Add an entry to a patient
+//  @route   POST /api/patients/:id/entries
+router.post('/:id/entries', (req, res) => {
 	try {
-		// Parse body content
-		const parsedPatient = parseNewPatient(req.body)
+		const patientID = req.params.id
 
-		// Add patient to the hardcoded data with random unique id
-		const newPatient = addNewPatient(parsedPatient)
+		// Check for patient first and then parse entry
 
-		res.status(200)
-		res.send(newPatient)
+		// Parse the entry to check if the required fields are present for each entry
+		const parsedEntry = parseNewEntry(req.body)
+
+		// Add the parsed entry to said patient
+		// const newEntry = addNewEntry(patientID, parsedEntry)
+
+		// Return the updated patient or entry?
 	} catch (error) {
 		const basicErrorMessage = 'Something went wrong'
 
@@ -59,19 +62,18 @@ router.post('/', (req, res) => {
 	}
 })
 
-//  @desc    Add an entry to a patient
-//  @route   POST /api/patients/:id/entries
-router.get('/:id/entries', (req, res) => {
+//  @desc    Add a new patient
+//  @route   POST /api/patients
+router.post('/', (req, res) => {
 	try {
-		const patientID = req.params.id
+		// Parse body content
+		const parsedPatient = parseNewPatient(req.body)
 
-		// Parse the entry to check if the required fields are present for each entry
-		const parsedEntry = parseNewEntry(req.body)
+		// Add patient to the hardcoded data with random unique id
+		const newPatient = addNewPatient(parsedPatient)
 
-		// Add the parsed entry to said patient
-		const newEntry = addNewEntry(patientID, parsedEntry)
-
-		// Return the updated patient or entry?
+		res.status(200)
+		res.send(newPatient)
 	} catch (error) {
 		const basicErrorMessage = 'Something went wrong'
 
