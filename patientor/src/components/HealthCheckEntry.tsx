@@ -12,9 +12,11 @@ const HealthCheck: React.FC<{ entry: HealthCheckEntry }> = ({ entry }) => {
 					<Icon name='doctor' />
 				</Card.Header>
 				<Card.Meta>{entry.description}</Card.Meta>
+
 				{entry.diagnosisCodes && (
 					<DiagnosesList diagnoseCodes={entry.diagnosisCodes} />
 				)}
+
 				{entry.healthCheckRating === 0 ? (
 					<Icon name='heart' color='green' />
 				) : entry.healthCheckRating === 1 || entry.healthCheckRating === 2 ? (
