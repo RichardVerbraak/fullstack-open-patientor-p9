@@ -1,11 +1,10 @@
 import React from 'react'
-import { Diagnosis, HospitalEntry } from '../types'
+import { HospitalEntry } from '../types'
 import { Card, Icon } from 'semantic-ui-react'
 import { useStateValue } from '../state'
+import DiagnosesList from './DiagnosesList'
 
 const Hospital: React.FC<{ entry: HospitalEntry }> = ({ entry }) => {
-	const [{ diagnoses }] = useStateValue()
-
 	return (
 		<Card>
 			<Card.Content>
@@ -15,23 +14,7 @@ const Hospital: React.FC<{ entry: HospitalEntry }> = ({ entry }) => {
 				</Card.Header>
 				<Card.Meta>{entry.description}</Card.Meta>
 				{entry.diagnosisCodes && (
-					<ul>
-						{entry.diagnosisCodes
-							?.map((code): Diagnosis | undefined => {
-								const sameCodeAsPatient = diagnoses.find((diagnose) => {
-									return diagnose.code === code
-								})
-
-								return sameCodeAsPatient
-							})
-							.map((diagnoseObj): React.ReactElement<Diagnosis> => {
-								return (
-									<li key={diagnoseObj?.code}>
-										{diagnoseObj?.code} <span>{diagnoseObj?.name}</span>
-									</li>
-								)
-							})}
-					</ul>
+					<DiagnosesList diagnoseCodes={entry.diagnosisCodes} />
 				)}
 			</Card.Content>
 		</Card>

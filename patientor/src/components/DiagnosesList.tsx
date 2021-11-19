@@ -11,11 +11,7 @@ const DiagnosesList: React.FC<{ diagnoseCodes: Array<Diagnosis['code']> }> = ({
 }) => {
 	const [{ diagnoses }] = useStateValue()
 
-	console.log(diagnoseCodes)
-
 	// Create an array of diagnose codes by using .find in diagnoses to find the same code and return the found diagnose object
-	// Find always returns Type | undefined and because of such the key of the list item will be bugged
-	// No clue how to fix
 	const sameCodesAsPatient = diagnoseCodes?.map(
 		(code): Diagnosis | undefined => {
 			return diagnoses.find((diagnose) => {
