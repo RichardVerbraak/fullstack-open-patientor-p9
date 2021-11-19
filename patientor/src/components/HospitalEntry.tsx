@@ -1,7 +1,6 @@
 import React from 'react'
 import { HospitalEntry } from '../types'
 import { Card, Icon } from 'semantic-ui-react'
-import { useStateValue } from '../state'
 import DiagnosesList from './DiagnosesList'
 
 const Hospital: React.FC<{ entry: HospitalEntry }> = ({ entry }) => {
