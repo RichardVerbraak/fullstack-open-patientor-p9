@@ -31,6 +31,7 @@ const getNonSensitivePatient = (): nonSensitivePatient[] => {
 
 // Adds patient to patient data
 // The newPatient type is made to accept the data from the body (which comes without an ID)
+// But now the patient first gets parsed fully and receives an ID in the patientUtils file, this now is just a regular Patient type
 const addNewPatient = (patient: Patient): Patient => {
 	patients.push(patient)
 
