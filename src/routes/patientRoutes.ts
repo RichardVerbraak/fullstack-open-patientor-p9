@@ -40,15 +40,14 @@ router.post('/:id/entries', (req, res) => {
 		const patientID = req.params.id
 
 		// Check for patient first and then parse entry
-		const patient = getSinglePatient(patientID)
+		getSinglePatient(patientID)
 
-		if (patient) {
-			// Parse the entry to check if the required fields are present for each entry
-			const parsedEntry = parseNewEntry(req.body)
+		// Parse the entry to check if the required fields are present for each entry
+		const parsedEntry = parseNewEntry(req.body)
 
-			console.log(parsedEntry)
-			return parsedEntry
-		}
+		console.log(parsedEntry)
+		res.status(200)
+		res.send(parsedEntry)
 
 		// Add the parsed entry to said patient
 		// const newEntry = addNewEntry(patientID, parsedEntry)

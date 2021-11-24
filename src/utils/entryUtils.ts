@@ -1,47 +1,21 @@
 import { v1 as uuid } from 'uuid'
-import {
-	Entry,
-	HealthCheckEntry,
-	HealthCheckRating,
-	HospitalEntry,
-	newEntry,
-	OccupationalHealthCareEntry,
-} from '../types'
+import { HospitalEntry } from '../../patientor/src/types'
+import { Entry, HealthCheckEntry, HealthCheckRating, newEntry } from '../types'
 
 // Get entry object
 // Check the type of the entry ( Occupational | HealthCheck | Hospital )
 // Check if the object has the required fields for the corresponding entry
 
-// interface BaseEntryFields {
-// 	description: unknown
-// 	date: unknown
-// 	specialist: unknown
-// 	diagnosisCodes?: unknown
-// }
+// Enum to check if the entry.type matches any of these values in parseType
+enum EntryTypes {
+	HealthCheck = 'HealthCheck',
+	Hospital = 'Hospital',
+	OccupationalHealthcare = 'OccupationalHealthcare',
+}
 
-// interface HealthCheckFields extends BaseEntryFields {
-// 	type: 'HealthCheck'
-// 	healthCheckRating: unknown
-// }
-
-// interface OccupationalFields extends BaseEntryFields {
-// 	type: 'OccupationalHealthcare'
-// 	employerName: unknown
-// 	sickLeave?: {
-// 		startDate: unknown
-// 		endDate: unknown
-// 	}
-// }
-
-// interface HospitalFields extends BaseEntryFields {
-// 	type: 'Hospital'
-// 	discharge: {
-// 		date: unknown
-// 		criteria: unknown
-// 	}
-// }
-
-// type EntryFields = HealthCheckFields | OccupationalFields | HospitalFields
+const assertNever = (value: never): never => {
+	throw new Error(`Wrong value ${JSON.stringify(value)}`)
+}
 
 const parseNewEntry = (entry: newEntry): Entry => {
 	const { type } = entry
@@ -51,7 +25,7 @@ const parseNewEntry = (entry: newEntry): Entry => {
 		case 'HealthCheck': {
 			const parsedEntry = {
 				id: uuid(),
-				type: 'HealthCheck',
+				type: parseType(entry.type),
 				date: parseDate(entry.date),
 				specialist: parseString(entry.specialist),
 				description: parseString(entry.description),
@@ -62,17 +36,48 @@ const parseNewEntry = (entry: newEntry): Entry => {
 		}
 
 		case 'Hospital': {
-			return entry as HospitalEntry
+			const parsedEntry = {
+				id: uuid(),
+				type: parseType(entry.type),
+				date: parseDate(entry.date),
+				specialist: parseString(entry.specialist),
+				description: parseString(entry.description),
+				discharge: entry.discharge,
+			}
+
+			return parsedEntry as HospitalEntry
 		}
 
 		case 'OccupationalHealthcare': {
-			return entry as OccupationalHealthCareEntry
+			const parsedEntry = {
+				id: uuid(),
+				type: entry.type,
+				date: parseDate(entry.date),
+				specialist: parseString(entry.specialist),
+				description: parseString(entry.description),
+				employerName: entry.employerName,
+				sickLeave: entry.sickLeave,
+			}
+
+			return parsedEntry
 		}
 
 		default: {
-			return type
+			return assertNever(entry)
 		}
 	}
+}
+
+const isType = (type: any): type is EntryTypes => {
+	return Object.values(EntryTypes).includes(type)
+}
+
+const parseType = (type: unknown) => {
+	if (!type || !isString(type) || isType(type)) {
+		throw new Error(`Missing name or invalid data -- ${type}`)
+	}
+
+	return type
 }
 
 const isString = (data: unknown): data is string => {
