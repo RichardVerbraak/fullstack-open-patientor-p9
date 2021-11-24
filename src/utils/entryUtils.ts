@@ -1,17 +1,16 @@
 import { v1 as uuid } from 'uuid'
-import { HospitalEntry } from '../../patientor/src/types'
-import { Entry, HealthCheckEntry, HealthCheckRating, newEntry } from '../types'
+import { Entry, HealthCheckRating, newEntry } from '../types'
 
 // Get entry object
 // Check the type of the entry ( Occupational | HealthCheck | Hospital )
 // Check if the object has the required fields for the corresponding entry
 
 // Enum to check if the entry.type matches any of these values in parseType
-enum EntryTypes {
-	HealthCheck = 'HealthCheck',
-	Hospital = 'Hospital',
-	OccupationalHealthcare = 'OccupationalHealthcare',
-}
+// enum EntryTypes {
+// 	HealthCheck = 'HealthCheck',
+// 	Hospital = 'Hospital',
+// 	OccupationalHealthcare = 'OccupationalHealthcare',
+// }
 
 const assertNever = (value: never): never => {
 	throw new Error(`Wrong value ${JSON.stringify(value)}`)
@@ -25,37 +24,37 @@ const parseNewEntry = (entry: newEntry): Entry => {
 		case 'HealthCheck': {
 			const parsedEntry = {
 				id: uuid(),
-				type: parseType(entry.type),
+				type,
 				date: parseDate(entry.date),
 				specialist: parseString(entry.specialist),
 				description: parseString(entry.description),
 				healthCheckRating: parseHealthCheckRating(entry.healthCheckRating),
 			}
 
-			return parsedEntry as HealthCheckEntry
+			return parsedEntry
 		}
 
 		case 'Hospital': {
 			const parsedEntry = {
 				id: uuid(),
-				type: parseType(entry.type),
+				type,
 				date: parseDate(entry.date),
 				specialist: parseString(entry.specialist),
 				description: parseString(entry.description),
 				discharge: entry.discharge,
 			}
 
-			return parsedEntry as HospitalEntry
+			return parsedEntry
 		}
 
 		case 'OccupationalHealthcare': {
 			const parsedEntry = {
 				id: uuid(),
-				type: entry.type,
+				type,
 				date: parseDate(entry.date),
 				specialist: parseString(entry.specialist),
 				description: parseString(entry.description),
-				employerName: entry.employerName,
+				employerName: parseString(entry.employerName),
 				sickLeave: entry.sickLeave,
 			}
 
@@ -68,17 +67,17 @@ const parseNewEntry = (entry: newEntry): Entry => {
 	}
 }
 
-const isType = (type: any): type is EntryTypes => {
-	return Object.values(EntryTypes).includes(type)
-}
+// const isType = (type: any): type is EntryTypes => {
+// 	return Object.values(EntryTypes).includes(type)
+// }
 
-const parseType = (type: unknown) => {
-	if (!type || !isString(type) || isType(type)) {
-		throw new Error(`Missing name or invalid data -- ${type}`)
-	}
+// const parseType = (type: unknown) => {
+// 	if (!type || !isString(type) || !isType(type)) {
+// 		throw new Error(`Missing type or invalid data -- ${type}`)
+// 	}
 
-	return type
-}
+// 	return type
+// }
 
 const isString = (data: unknown): data is string => {
 	return typeof data === 'string' || data instanceof String
@@ -86,7 +85,7 @@ const isString = (data: unknown): data is string => {
 
 const parseString = (data: unknown) => {
 	if (!data || !isString(data)) {
-		throw new Error('Not a string')
+		throw new Error(`Missing or not a string value -- ${data}`)
 	}
 
 	return data
@@ -98,7 +97,7 @@ const isDate = (date: string): boolean => {
 
 const parseDate = (date: unknown) => {
 	if (!date || !isString(date) || !isDate(date)) {
-		throw new Error(`Not the correct date type ${date}`)
+		throw new Error(`Missing or not a valid date -- ${date}`)
 	}
 
 	return date
@@ -110,7 +109,7 @@ const isHealthCheckRating = (rating: any): rating is HealthCheckRating => {
 
 const parseHealthCheckRating = (healthCheckRating: unknown) => {
 	if (!healthCheckRating || !isHealthCheckRating(healthCheckRating)) {
-		throw new Error('No rating')
+		throw new Error(`Missing or not the correct rating -- ${healthCheckRating}`)
 	}
 
 	return healthCheckRating
