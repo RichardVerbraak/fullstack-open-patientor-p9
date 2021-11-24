@@ -58,7 +58,14 @@ const assertNever = (value: never): never => {
 }
 
 const parseHealthCheckEntry = (entry: HealthCheckFields): HealthCheckEntry => {
-	const { type, date, specialist, description, healthCheckRating } = entry
+	const {
+		type,
+		date,
+		specialist,
+		description,
+		healthCheckRating,
+		diagnosisCodes,
+	} = entry
 
 	const parsedEntry = {
 		id: uuid(),
@@ -67,25 +74,28 @@ const parseHealthCheckEntry = (entry: HealthCheckFields): HealthCheckEntry => {
 		specialist: parseString(specialist),
 		description: parseString(description),
 		healthCheckRating: parseHealthCheckRating(healthCheckRating),
-		diagnosisCodes: entry.diagnosisCodes
-			? parseDiagnosisCodes(entry.diagnosisCodes)
-			: entry.diagnosisCodes,
+		diagnosisCodes: diagnosisCodes
+			? parseDiagnosisCodes(diagnosisCodes)
+			: diagnosisCodes,
 	}
 
 	return parsedEntry
 }
 
 const parseHospitalEntry = (entry: HospitalFields): HospitalEntry => {
+	const { type, date, specialist, description, discharge, diagnosisCodes } =
+		entry
+
 	const parsedEntry = {
 		id: uuid(),
-		type: entry.type,
-		date: parseDate(entry.date),
-		specialist: parseString(entry.specialist),
-		description: parseString(entry.description),
-		discharge: parseDischarge(entry.discharge),
-		diagnosisCodes: entry.diagnosisCodes
-			? parseDiagnosisCodes(entry.diagnosisCodes)
-			: entry.diagnosisCodes,
+		type: type,
+		date: parseDate(date),
+		specialist: parseString(specialist),
+		description: parseString(description),
+		discharge: parseDischarge(discharge),
+		diagnosisCodes: diagnosisCodes
+			? parseDiagnosisCodes(diagnosisCodes)
+			: diagnosisCodes,
 	}
 
 	return parsedEntry
@@ -94,14 +104,27 @@ const parseHospitalEntry = (entry: HospitalFields): HospitalEntry => {
 const parseOccupationalEntry = (
 	entry: OccupationalHealthCareFields
 ): OccupationalHealthCareEntry => {
+	const {
+		type,
+		date,
+		specialist,
+		description,
+		employerName,
+		sickLeave,
+		diagnosisCodes,
+	} = entry
+
 	const parsedEntry = {
 		id: uuid(),
-		type: entry.type,
-		date: parseDate(entry.date),
-		specialist: parseString(entry.specialist),
-		description: parseString(entry.description),
-		employerName: parseString(entry.employerName),
-		sickLeave: parseSickLeave(entry.sickLeave),
+		type: type,
+		date: parseDate(date),
+		specialist: parseString(specialist),
+		description: parseString(description),
+		employerName: parseString(employerName),
+		sickLeave: sickLeave ? parseSickLeave(sickLeave) : sickLeave,
+		diagnosisCodes: diagnosisCodes
+			? parseDiagnosisCodes(diagnosisCodes)
+			: diagnosisCodes,
 	}
 
 	return parsedEntry
