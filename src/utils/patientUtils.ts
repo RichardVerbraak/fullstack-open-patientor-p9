@@ -1,5 +1,6 @@
 import { Gender, Patient } from '../types'
 import { v1 as uuid } from 'uuid'
+import { isString, parseDate, parseString } from './genericUtils'
 
 // Will throw up error about unsafe-argument because Req.body aka Req being of any type
 // This was not explained in the course...
@@ -35,34 +36,9 @@ const parseNewPatient = ({
 	return parsedPatient
 }
 
-const isString = (name: unknown): name is string => {
-	return typeof name === 'string' || name instanceof String
-}
-
-const isDate = (date: string): boolean => {
-	return Boolean(Date.parse(date))
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isGender = (gender: any): gender is Gender => {
 	return Object.values(Gender).includes(gender)
-}
-
-const parseString = (name: unknown): string => {
-	if (!name || !isString(name)) {
-		throw new Error(`Missing name or invalid data -- ${name}`)
-	}
-
-	return name
-}
-
-// isString operation runs first so that's why isDate can take the date in as string since it comes AFTER parsing for a string
-const parseDate = (date: unknown): string => {
-	if (!date || !isString(date) || !isDate(date)) {
-		throw new Error(`Missing date or invalid data -- ${date}`)
-	}
-
-	return date
 }
 
 const parseSSN = (ssn: unknown): string => {

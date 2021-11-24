@@ -1,5 +1,6 @@
 import { v1 as uuid } from 'uuid'
 import { Entry, HealthCheckRating, newEntry } from '../types'
+import { isDate, isString, parseDate, parseString } from './genericUtils'
 
 // Get entry object
 // Check the type of the entry ( Occupational | HealthCheck | Hospital )
@@ -41,7 +42,7 @@ const parseNewEntry = (entry: newEntry): Entry => {
 				date: parseDate(entry.date),
 				specialist: parseString(entry.specialist),
 				description: parseString(entry.description),
-				discharge: entry.discharge,
+				discharge: parseDischarge(entry.discharge),
 			}
 
 			return parsedEntry
@@ -55,7 +56,7 @@ const parseNewEntry = (entry: newEntry): Entry => {
 				specialist: parseString(entry.specialist),
 				description: parseString(entry.description),
 				employerName: parseString(entry.employerName),
-				sickLeave: entry.sickLeave,
+				sickLeave: parseSickLeave(entry.sickLeave),
 			}
 
 			return parsedEntry
@@ -79,35 +80,55 @@ const parseNewEntry = (entry: newEntry): Entry => {
 // 	return type
 // }
 
-const isString = (data: unknown): data is string => {
-	return typeof data === 'string' || data instanceof String
+interface Discharge {
+	date: string
+	criteria: string
 }
 
-const parseString = (data: unknown) => {
-	if (!data || !isString(data)) {
-		throw new Error(`Missing or not a string value -- ${data}`)
+interface sickLeave {
+	startDate: string
+	endDate: string
+}
+
+const isSickLeave = (sickLeave: any): sickLeave is sickLeave => {
+	return isString(sickLeave.startDate) && isString(sickLeave.endDate)
+}
+
+const parseSickLeave = (sickLeave: unknown) => {
+	if (!sickLeave || !isSickLeave(sickLeave)) {
+		throw new Error(
+			`Missing or one of the values is malformed -- ${JSON.stringify(
+				sickLeave
+			)}`
+		)
 	}
 
-	return data
+	return sickLeave
 }
 
-const isDate = (date: string): boolean => {
-	return Boolean(Date.parse(date))
+const isDischarge = (discharge: any): discharge is Discharge => {
+	return isDate(discharge.date) && isString(discharge.criteria)
 }
 
-const parseDate = (date: unknown) => {
-	if (!date || !isString(date) || !isDate(date)) {
-		throw new Error(`Missing or not a valid date -- ${date}`)
+const parseDischarge = (dischargeObject: unknown): Discharge => {
+	if (!dischargeObject || !isDischarge(dischargeObject)) {
+		throw new Error(
+			`Missing or one of the values is malformed -- ${JSON.stringify(
+				dischargeObject
+			)}`
+		)
 	}
 
-	return date
+	return dischargeObject
 }
 
 const isHealthCheckRating = (rating: any): rating is HealthCheckRating => {
 	return Object.values(HealthCheckRating).includes(rating)
 }
 
-const parseHealthCheckRating = (healthCheckRating: unknown) => {
+const parseHealthCheckRating = (
+	healthCheckRating: unknown
+): HealthCheckRating => {
 	if (!healthCheckRating || !isHealthCheckRating(healthCheckRating)) {
 		throw new Error(`Missing or not the correct rating -- ${healthCheckRating}`)
 	}
