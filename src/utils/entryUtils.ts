@@ -6,18 +6,7 @@ import {
 	HospitalEntry,
 	OccupationalHealthCareEntry,
 } from '../types'
-import { isDate, isString, parseDate, parseString } from './genericUtils'
-
-// Get entry object
-// Check the type of the entry ( Occupational | HealthCheck | Hospital )
-// Check if the object has the required fields for the corresponding entry
-
-// Enum to check if the entry.type matches any of these values in parseType
-// enum EntryTypes {
-// 	HealthCheck = 'HealthCheck',
-// 	Hospital = 'Hospital',
-// 	OccupationalHealthcare = 'OccupationalHealthcare',
-// }
+import { isDate, isString, parseDate } from './genericUtils'
 
 type BaseEntryFields = {
 	description: unknown
@@ -53,10 +42,29 @@ type EntryFields =
 	| HospitalFields
 	| OccupationalHealthCareFields
 
+// These two are being used to make sure the fields of the object are present and the right format
+interface Discharge {
+	date: string
+	criteria: string
+}
+
+interface sickLeave {
+	startDate: string
+	endDate: string
+}
+
+// Used for checking if the entry.type that is coming in via the req.body is included in this Enum
+enum EntryTypes {
+	HealthCheck = 'HealthCheck',
+	Hospital = 'Hospital',
+	Occupational = 'OccupationalHealthcare',
+}
+
 const assertNever = (value: never): never => {
 	throw new Error(`Wrong value ${JSON.stringify(value)}`)
 }
 
+// HealthCheck
 const parseHealthCheckEntry = (entry: HealthCheckFields): HealthCheckEntry => {
 	const {
 		type,
@@ -71,8 +79,8 @@ const parseHealthCheckEntry = (entry: HealthCheckFields): HealthCheckEntry => {
 		id: uuid(),
 		type,
 		date: parseDate(date),
-		specialist: parseString(specialist),
-		description: parseString(description),
+		specialist: parseSpecialist(specialist),
+		description: parseDescription(description),
 		healthCheckRating: parseHealthCheckRating(healthCheckRating),
 		diagnosisCodes: diagnosisCodes
 			? parseDiagnosisCodes(diagnosisCodes)
@@ -82,6 +90,7 @@ const parseHealthCheckEntry = (entry: HealthCheckFields): HealthCheckEntry => {
 	return parsedEntry
 }
 
+// Hospital
 const parseHospitalEntry = (entry: HospitalFields): HospitalEntry => {
 	const { type, date, specialist, description, discharge, diagnosisCodes } =
 		entry
@@ -90,8 +99,8 @@ const parseHospitalEntry = (entry: HospitalFields): HospitalEntry => {
 		id: uuid(),
 		type: type,
 		date: parseDate(date),
-		specialist: parseString(specialist),
-		description: parseString(description),
+		specialist: parseSpecialist(specialist),
+		description: parseDescription(description),
 		discharge: parseDischarge(discharge),
 		diagnosisCodes: diagnosisCodes
 			? parseDiagnosisCodes(diagnosisCodes)
@@ -101,6 +110,7 @@ const parseHospitalEntry = (entry: HospitalFields): HospitalEntry => {
 	return parsedEntry
 }
 
+// Occupational
 const parseOccupationalEntry = (
 	entry: OccupationalHealthCareFields
 ): OccupationalHealthCareEntry => {
@@ -118,9 +128,9 @@ const parseOccupationalEntry = (
 		id: uuid(),
 		type: type,
 		date: parseDate(date),
-		specialist: parseString(specialist),
-		description: parseString(description),
-		employerName: parseString(employerName),
+		specialist: parseSpecialist(specialist),
+		description: parseDescription(description),
+		employerName: parseEmployerName(employerName),
 		sickLeave: sickLeave ? parseSickLeave(sickLeave) : sickLeave,
 		diagnosisCodes: diagnosisCodes
 			? parseDiagnosisCodes(diagnosisCodes)
@@ -130,10 +140,37 @@ const parseOccupationalEntry = (
 	return parsedEntry
 }
 
+const parseEmployerName = (name: unknown): string => {
+	if (!name || !isString(name)) {
+		throw new Error(`Missing employer name or is not a string -- ${name}`)
+	}
+
+	return name
+}
+
+const parseDescription = (description: unknown): string => {
+	if (!description || !isString(description)) {
+		throw new Error(`Missing description or is not a string -- ${description}`)
+	}
+
+	return description
+}
+
+const parseSpecialist = (specialist: unknown): string => {
+	if (!specialist || !isString(specialist)) {
+		throw new Error(`Missing specialist or is not a string -- ${specialist}`)
+	}
+
+	return specialist
+}
+
+// Checks if the type is correct => pass the parsing to the right function based on type => return parsedEntry
 const parseNewEntry = (entry: EntryFields): Entry => {
 	const { type } = entry
 
-	// TODO: Check if there is a type
+	// Check for type
+	parseType(type)
+
 	switch (type) {
 		case 'HealthCheck': {
 			return parseHealthCheckEntry(entry)
@@ -153,30 +190,16 @@ const parseNewEntry = (entry: EntryFields): Entry => {
 	}
 }
 
-// enum EntryTypes {
-// 	HealthCheck = 'HealthCheck',
-// }
-
-// const isType = (type: any): type is EntryTypes => {
-// 	return Object.values(EntryTypes).includes(type)
-// }
-
-// const parseType = (type: unknown) => {
-// 	if (!type || !isString(type) || !isType(type)) {
-// 		throw new Error(`Missing type or invalid data -- ${type}`)
-// 	}
-
-// 	return type
-// }
-
-interface Discharge {
-	date: string
-	criteria: string
+const isType = (type: any): type is EntryTypes => {
+	return Object.values(EntryTypes).includes(type)
 }
 
-interface sickLeave {
-	startDate: string
-	endDate: string
+const parseType = (type: unknown) => {
+	if (!type || !isString(type) || !isType(type)) {
+		throw new Error(`Missing type or invalid data -- ${type}`)
+	}
+
+	return type
 }
 
 const isDiagnosisCodes = (codes: any) => {

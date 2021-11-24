@@ -48,6 +48,8 @@ const addNewEntry = (id: string, entry: Entry): Entry => {
 		foundPatient.entries.push(entry)
 	}
 
+	console.log(foundPatient)
+
 	return entry
 }
 

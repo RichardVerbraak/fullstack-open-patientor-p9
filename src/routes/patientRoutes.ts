@@ -3,7 +3,7 @@ import {
 	getNonSensitivePatient,
 	getSinglePatient,
 	addNewPatient,
-	// addNewEntry,
+	addNewEntry,
 } from '../services/patientService'
 import { parseNewEntry } from '../utils/entryUtils'
 import { parseNewPatient } from '../utils/patientUtils'
@@ -39,18 +39,14 @@ router.post('/:id/entries', (req, res) => {
 	try {
 		const patientID = req.params.id
 
-		// Check for patient first and then parse entry
-		getSinglePatient(patientID)
-
 		// Parse the entry to check if the required fields are present for each entry
 		const parsedEntry = parseNewEntry(req.body)
 
-		console.log(parsedEntry)
-		res.status(200)
-		res.send(parsedEntry)
-
 		// Add the parsed entry to said patient
-		// const newEntry = addNewEntry(patientID, parsedEntry)
+		const newEntry = addNewEntry(patientID, parsedEntry)
+
+		res.status(200)
+		res.send(newEntry)
 
 		// Return the updated patient or entry?
 	} catch (error) {
