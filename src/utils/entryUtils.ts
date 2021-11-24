@@ -1,5 +1,6 @@
 import { v1 as uuid } from 'uuid'
 import {
+	Diagnosis,
 	Entry,
 	HealthCheckEntry,
 	HealthCheckRating,
@@ -12,7 +13,7 @@ type BaseEntryFields = {
 	description: unknown
 	date: unknown
 	specialist: unknown
-	diagnosisCodes?: any
+	diagnosisCodes?: Array<Diagnosis['code']>
 }
 
 interface HealthCheckFields extends BaseEntryFields {
@@ -82,9 +83,7 @@ const parseHealthCheckEntry = (entry: HealthCheckFields): HealthCheckEntry => {
 		specialist: parseSpecialist(specialist),
 		description: parseDescription(description),
 		healthCheckRating: parseHealthCheckRating(healthCheckRating),
-		diagnosisCodes: diagnosisCodes
-			? parseDiagnosisCodes(diagnosisCodes)
-			: diagnosisCodes,
+		diagnosisCodes: diagnosisCodes && parseDiagnosisCodes(entry.diagnosisCodes),
 	}
 
 	return parsedEntry
@@ -103,8 +102,8 @@ const parseHospitalEntry = (entry: HospitalFields): HospitalEntry => {
 		description: parseDescription(description),
 		discharge: parseDischarge(discharge),
 		diagnosisCodes: diagnosisCodes
-			? parseDiagnosisCodes(diagnosisCodes)
-			: diagnosisCodes,
+			? parseDiagnosisCodes(entry.diagnosisCodes)
+			: undefined,
 	}
 
 	return parsedEntry
@@ -133,8 +132,8 @@ const parseOccupationalEntry = (
 		employerName: parseEmployerName(employerName),
 		sickLeave: sickLeave ? parseSickLeave(sickLeave) : sickLeave,
 		diagnosisCodes: diagnosisCodes
-			? parseDiagnosisCodes(diagnosisCodes)
-			: diagnosisCodes,
+			? parseDiagnosisCodes(entry.diagnosisCodes)
+			: undefined,
 	}
 
 	return parsedEntry
@@ -202,7 +201,7 @@ const parseType = (type: unknown) => {
 	return type
 }
 
-const isDiagnosisCodes = (codes: any) => {
+const isDiagnosisCodes = (codes: any): codes is Array<Diagnosis['code']> => {
 	return (
 		Array.isArray(codes) &&
 		codes.every((code) => {
@@ -211,7 +210,7 @@ const isDiagnosisCodes = (codes: any) => {
 	)
 }
 
-const parseDiagnosisCodes = (codes: unknown) => {
+const parseDiagnosisCodes = (codes: unknown): Array<Diagnosis['code']> => {
 	console.log(codes)
 	if (!codes || !isDiagnosisCodes(codes)) {
 		throw new Error(`No codes`)
