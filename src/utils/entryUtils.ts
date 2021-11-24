@@ -1,5 +1,11 @@
 import { v1 as uuid } from 'uuid'
-import { Entry, HealthCheckRating, newEntry } from '../types'
+import {
+	Entry,
+	HealthCheckEntry,
+	HealthCheckRating,
+	HospitalEntry,
+	OccupationalHealthCareEntry,
+} from '../types'
 import { isDate, isString, parseDate, parseString } from './genericUtils'
 
 // Get entry object
@@ -13,53 +19,109 @@ import { isDate, isString, parseDate, parseString } from './genericUtils'
 // 	OccupationalHealthcare = 'OccupationalHealthcare',
 // }
 
+type BaseEntryFields = {
+	description: unknown
+	date: unknown
+	specialist: unknown
+	diagnosisCodes?: any
+}
+
+interface HealthCheckFields extends BaseEntryFields {
+	type: 'HealthCheck'
+	healthCheckRating: unknown
+}
+
+interface HospitalFields extends BaseEntryFields {
+	type: 'Hospital'
+	discharge: {
+		date: unknown
+		criteria: unknown
+	}
+}
+
+interface OccupationalHealthCareFields extends BaseEntryFields {
+	type: 'OccupationalHealthcare'
+	employerName: unknown
+	sickLeave?: {
+		startDate: unknown
+		endDate: unknown
+	}
+}
+
+type EntryFields =
+	| HealthCheckFields
+	| HospitalFields
+	| OccupationalHealthCareFields
+
 const assertNever = (value: never): never => {
 	throw new Error(`Wrong value ${JSON.stringify(value)}`)
 }
 
-const parseNewEntry = (entry: newEntry): Entry => {
+const parseHealthCheckEntry = (entry: HealthCheckFields): HealthCheckEntry => {
+	const { type, date, specialist, description, healthCheckRating } = entry
+
+	const parsedEntry = {
+		id: uuid(),
+		type,
+		date: parseDate(date),
+		specialist: parseString(specialist),
+		description: parseString(description),
+		healthCheckRating: parseHealthCheckRating(healthCheckRating),
+		diagnosisCodes: entry.diagnosisCodes
+			? parseDiagnosisCodes(entry.diagnosisCodes)
+			: entry.diagnosisCodes,
+	}
+
+	return parsedEntry
+}
+
+const parseHospitalEntry = (entry: HospitalFields): HospitalEntry => {
+	const parsedEntry = {
+		id: uuid(),
+		type: entry.type,
+		date: parseDate(entry.date),
+		specialist: parseString(entry.specialist),
+		description: parseString(entry.description),
+		discharge: parseDischarge(entry.discharge),
+		diagnosisCodes: entry.diagnosisCodes
+			? parseDiagnosisCodes(entry.diagnosisCodes)
+			: entry.diagnosisCodes,
+	}
+
+	return parsedEntry
+}
+
+const parseOccupationalEntry = (
+	entry: OccupationalHealthCareFields
+): OccupationalHealthCareEntry => {
+	const parsedEntry = {
+		id: uuid(),
+		type: entry.type,
+		date: parseDate(entry.date),
+		specialist: parseString(entry.specialist),
+		description: parseString(entry.description),
+		employerName: parseString(entry.employerName),
+		sickLeave: parseSickLeave(entry.sickLeave),
+	}
+
+	return parsedEntry
+}
+
+const parseNewEntry = (entry: EntryFields): Entry => {
 	const { type } = entry
 
 	// TODO: Check if there is a type
 	switch (type) {
 		case 'HealthCheck': {
-			const parsedEntry = {
-				id: uuid(),
-				type,
-				date: parseDate(entry.date),
-				specialist: parseString(entry.specialist),
-				description: parseString(entry.description),
-				healthCheckRating: parseHealthCheckRating(entry.healthCheckRating),
-			}
-
-			return parsedEntry
+			return parseHealthCheckEntry(entry)
 		}
 
 		case 'Hospital': {
-			const parsedEntry = {
-				id: uuid(),
-				type,
-				date: parseDate(entry.date),
-				specialist: parseString(entry.specialist),
-				description: parseString(entry.description),
-				discharge: parseDischarge(entry.discharge),
-			}
-
-			return parsedEntry
+			return parseHospitalEntry(entry)
 		}
 
 		case 'OccupationalHealthcare': {
-			const parsedEntry = {
-				id: uuid(),
-				type,
-				date: parseDate(entry.date),
-				specialist: parseString(entry.specialist),
-				description: parseString(entry.description),
-				employerName: parseString(entry.employerName),
-				sickLeave: parseSickLeave(entry.sickLeave),
-			}
-
-			return parsedEntry
+			return parseOccupationalEntry(entry)
 		}
 
 		default: {
@@ -67,6 +129,10 @@ const parseNewEntry = (entry: newEntry): Entry => {
 		}
 	}
 }
+
+// enum EntryTypes {
+// 	HealthCheck = 'HealthCheck',
+// }
 
 // const isType = (type: any): type is EntryTypes => {
 // 	return Object.values(EntryTypes).includes(type)
@@ -90,6 +156,24 @@ interface sickLeave {
 	endDate: string
 }
 
+const isDiagnosisCodes = (codes: any) => {
+	return (
+		Array.isArray(codes) &&
+		codes.every((code) => {
+			return typeof code === 'string'
+		})
+	)
+}
+
+const parseDiagnosisCodes = (codes: unknown) => {
+	console.log(codes)
+	if (!codes || !isDiagnosisCodes(codes)) {
+		throw new Error(`No codes`)
+	}
+
+	return codes
+}
+
 const isSickLeave = (sickLeave: any): sickLeave is sickLeave => {
 	return isString(sickLeave.startDate) && isString(sickLeave.endDate)
 }
@@ -107,7 +191,11 @@ const parseSickLeave = (sickLeave: unknown) => {
 }
 
 const isDischarge = (discharge: any): discharge is Discharge => {
-	return isDate(discharge.date) && isString(discharge.criteria)
+	return (
+		isString(discharge.date) &&
+		isDate(discharge.date) &&
+		isString(discharge.criteria)
+	)
 }
 
 const parseDischarge = (dischargeObject: unknown): Discharge => {
