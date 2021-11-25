@@ -8,6 +8,7 @@ import { setSinglePatient, useStateValue } from '../state'
 import { Patient } from '../types'
 import { Icon } from 'semantic-ui-react'
 import EntryDetails from './EntryDetails'
+import AddEntryForm from './AddEntryForm'
 
 // Entry is passed in as a destructured object as prop instead of 'entry={etry}'
 // This is because of the 'entry is not assignable to IntrinsicAttributes warning'
@@ -25,6 +26,23 @@ const PatientPage = () => {
 
 		dispatch(setSinglePatient(data))
 	}
+
+	// Change form values type
+	// const submitNewEntry = async (formValues: any) => {
+	// 	try {
+	// 		console.log(formValues)
+
+	// 		// Destructure
+	// 		const data = await axios.post(`${apiBaseUrl}/patients/${id}/entries`)
+
+	// 		console.log(data)
+
+	// 		// dispatch the data to the state to render the new entry on the patient
+	// 	} catch (error) {
+	// 		// Pass error down to the form later on?
+	// 		console.log(error)
+	// 	}
+	// }
 
 	useEffect(() => {
 		// Only fetch when URL param (id) doesn't match that of the patient
@@ -62,6 +80,9 @@ const PatientPage = () => {
 				) : (
 					<div>No entries</div>
 				)}
+				<div>
+					<AddEntryForm />
+				</div>
 			</div>
 		</div>
 	)
