@@ -9,7 +9,7 @@ import {
 } from '../types'
 import { isDate, isString, parseDate } from './genericUtils'
 
-type BaseEntryFields = {
+interface BaseEntryFields {
 	description: unknown
 	date: unknown
 	specialist: unknown
@@ -76,14 +76,22 @@ const parseHealthCheckEntry = (entry: HealthCheckFields): HealthCheckEntry => {
 		diagnosisCodes,
 	} = entry
 
-	const parsedEntry = {
+	let parsedEntry = {} as HealthCheckEntry
+
+	parsedEntry = {
 		id: uuid(),
 		type,
 		date: parseDate(date),
 		specialist: parseSpecialist(specialist),
 		description: parseDescription(description),
 		healthCheckRating: parseHealthCheckRating(healthCheckRating),
-		diagnosisCodes: diagnosisCodes && parseDiagnosisCodes(entry.diagnosisCodes),
+	}
+
+	if (diagnosisCodes) {
+		parsedEntry = {
+			...parsedEntry,
+			diagnosisCodes: parseDiagnosisCodes(diagnosisCodes),
+		}
 	}
 
 	return parsedEntry
@@ -94,16 +102,22 @@ const parseHospitalEntry = (entry: HospitalFields): HospitalEntry => {
 	const { type, date, specialist, description, discharge, diagnosisCodes } =
 		entry
 
-	const parsedEntry = {
+	let parsedEntry = {} as HospitalEntry
+
+	parsedEntry = {
 		id: uuid(),
 		type: type,
 		date: parseDate(date),
 		specialist: parseSpecialist(specialist),
 		description: parseDescription(description),
 		discharge: parseDischarge(discharge),
-		diagnosisCodes: diagnosisCodes
-			? parseDiagnosisCodes(entry.diagnosisCodes)
-			: undefined,
+	}
+
+	if (diagnosisCodes) {
+		parsedEntry = {
+			...parsedEntry,
+			diagnosisCodes: parseDiagnosisCodes(diagnosisCodes),
+		}
 	}
 
 	return parsedEntry
@@ -119,21 +133,33 @@ const parseOccupationalEntry = (
 		specialist,
 		description,
 		employerName,
-		sickLeave,
 		diagnosisCodes,
+		sickLeave,
 	} = entry
 
-	const parsedEntry = {
+	// Assert the empty object to be the same as the entry
+	// This says that you're sure this object will end up like said entry
+	// Else TS will spout errors about the object missing all of the properties from said type
+	let parsedEntry = {} as OccupationalHealthCareEntry
+
+	parsedEntry = {
 		id: uuid(),
 		type: type,
 		date: parseDate(date),
 		specialist: parseSpecialist(specialist),
 		description: parseDescription(description),
 		employerName: parseEmployerName(employerName),
-		sickLeave: sickLeave ? parseSickLeave(sickLeave) : sickLeave,
-		diagnosisCodes: diagnosisCodes
-			? parseDiagnosisCodes(entry.diagnosisCodes)
-			: undefined,
+	}
+
+	if (diagnosisCodes) {
+		parsedEntry = {
+			...parsedEntry,
+			diagnosisCodes: parseDiagnosisCodes(diagnosisCodes),
+		}
+	}
+
+	if (sickLeave) {
+		parsedEntry = { ...parsedEntry, sickLeave: parseSickLeave(sickLeave) }
 	}
 
 	return parsedEntry
