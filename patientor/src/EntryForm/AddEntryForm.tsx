@@ -1,6 +1,7 @@
 import React from 'react'
 // import { Grid, Button } from 'semantic-ui-react'
 import { Formik, Form, Field } from 'formik'
+import { TextField } from './EntryFormFields'
 // import { HealthCheckEntry } from '../types'
 // import { TextField } from '../AddPatientModal/FormField'
 
@@ -22,15 +23,10 @@ const AddEntryForm = () => {
 				console.log(data)
 			}}
 		>
-			{({ values }) => {
+			{() => {
 				return (
 					<Form className='form ui'>
-						<Field
-							name='test'
-							label='test'
-							placeholder='test'
-							value={values.test}
-						/>
+						<Field name='test' label='test' component={TextField} />
 					</Form>
 				)
 			}}

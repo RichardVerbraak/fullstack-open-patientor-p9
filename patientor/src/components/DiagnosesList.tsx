@@ -25,9 +25,9 @@ const DiagnosesList: React.FC<{ diagnoseCodes: Array<Diagnosis['code']> }> = ({
 			{
 				<ul>
 					{sameCodesAsPatient.map(
-						(diagnoseObj): React.ReactElement<Diagnosis> => {
+						(diagnoseObj, i): React.ReactElement<Diagnosis> => {
 							return (
-								<li key={diagnoseObj?.code}>
+								<li key={i}>
 									{diagnoseObj?.code} <span>{diagnoseObj?.name}</span>
 								</li>
 							)

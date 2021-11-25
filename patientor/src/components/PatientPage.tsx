@@ -8,7 +8,7 @@ import { setSinglePatient, useStateValue } from '../state'
 import { Patient } from '../types'
 import { Icon } from 'semantic-ui-react'
 import EntryDetails from './EntryDetails'
-import AddEntryForm from './AddEntryForm'
+import AddEntryForm from '../EntryForm/AddEntryForm'
 
 // Entry is passed in as a destructured object as prop instead of 'entry={etry}'
 // This is because of the 'entry is not assignable to IntrinsicAttributes warning'
