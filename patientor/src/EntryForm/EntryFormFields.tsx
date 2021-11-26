@@ -21,4 +21,27 @@ const TextField = ({ label, placeholder, field }: TextInput) => {
 	)
 }
 
-export { TextField }
+enum TypeOptions {
+	HealthCheck = 'HealthCheck',
+	Hospital = 'Hospital',
+	OccupationalHealthCare = 'Occupational',
+}
+
+interface SelectFields extends FieldProps {
+	label: string
+}
+
+const SelectEntryField = ({ label, field }: SelectFields) => {
+	return (
+		<Form.Field>
+			<label>{label}</label>
+			<Field as='select' {...field} className='ui dropdown'>
+				<option>{TypeOptions.HealthCheck}</option>
+				<option>{TypeOptions.Hospital}</option>
+				<option>{TypeOptions.OccupationalHealthCare}</option>
+			</Field>
+		</Form.Field>
+	)
+}
+
+export { TextField, SelectEntryField }

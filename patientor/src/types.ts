@@ -48,6 +48,13 @@ export interface HospitalEntry extends BaseEntry {
 	}
 }
 
+export type OmitFromUnion<
+	T,
+	K extends string | number | symbol
+> = T extends unknown ? Omit<T, K> : never
+
+export type NewEntry = OmitFromUnion<Entry, 'id'>
+
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export type Entry =
 	| HealthCheckEntry
