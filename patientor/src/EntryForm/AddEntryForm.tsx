@@ -1,5 +1,5 @@
 import React from 'react'
-// import { Grid, Button } from 'semantic-ui-react'
+import { Button } from 'semantic-ui-react'
 import { Formik, Form, Field } from 'formik'
 import { TextField } from './EntryFormFields'
 // import { HealthCheckEntry } from '../types'
@@ -18,6 +18,7 @@ const AddEntryForm = () => {
 		<Formik
 			initialValues={{
 				test: '',
+				test2: '',
 			}}
 			onSubmit={(data) => {
 				console.log(data)
@@ -27,6 +28,10 @@ const AddEntryForm = () => {
 				return (
 					<Form className='form ui'>
 						<Field name='test' label='test' component={TextField} />
+						<Field name='test2' label='test2' component={TextField} />
+						<div>
+							<Button type='submit'>Add entry</Button>
+						</div>
 					</Form>
 				)
 			}}
