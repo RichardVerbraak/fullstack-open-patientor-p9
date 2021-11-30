@@ -5,10 +5,10 @@ import { useParams } from 'react-router'
 import { apiBaseUrl } from '../constants'
 import { setSinglePatient, useStateValue } from '../state'
 
-import { Patient } from '../types'
+import { NewEntry, Patient } from '../types'
 import { Icon } from 'semantic-ui-react'
 import EntryDetails from './EntryDetails'
-import AddEntryForm from '../EntryForm/AddEntryForm'
+import HealthCheckForm from '../EntryForm/HealthCheckForm'
 
 // Entry is passed in as a destructured object as prop instead of 'entry={etry}'
 // This is because of the 'entry is not assignable to IntrinsicAttributes warning'
@@ -28,21 +28,24 @@ const PatientPage = () => {
 	}
 
 	// Change form values type
-	// const submitNewEntry = async (formValues: any) => {
-	// 	try {
-	// 		console.log(formValues)
+	const submitNewEntry = async (formValues: any) => {
+		try {
+			console.log(formValues)
 
-	// 		// Destructure
-	// 		const data = await axios.post(`${apiBaseUrl}/patients/${id}/entries`)
+			// Destructure
+			const { data } = await axios.post<NewEntry>(
+				`${apiBaseUrl}/patients/${id}/entries`,
+				formValues
+			)
 
-	// 		console.log(data)
+			console.log(data)
 
-	// 		// dispatch the data to the state to render the new entry on the patient
-	// 	} catch (error) {
-	// 		// Pass error down to the form later on?
-	// 		console.log(error)
-	// 	}
-	// }
+			// dispatch the data to the state to render the new entry on the patient
+		} catch (error) {
+			// Pass error down to the form later on?
+			console.log(error)
+		}
+	}
 
 	useEffect(() => {
 		// Only fetch when URL param (id) doesn't match that of the patient
@@ -81,7 +84,7 @@ const PatientPage = () => {
 					<div>No entries</div>
 				)}
 				<div>
-					<AddEntryForm />
+					<HealthCheckForm onSubmit={submitNewEntry} />
 				</div>
 			</div>
 		</div>

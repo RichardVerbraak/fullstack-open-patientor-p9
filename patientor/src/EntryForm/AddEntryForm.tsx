@@ -4,18 +4,14 @@ import { Formik, Form, Field } from 'formik'
 import { SelectEntryField, TextField } from './EntryFormFields'
 import { DiagnosisSelection, NumberField } from '../AddPatientModal/FormField'
 import { useStateValue } from '../state'
-// import { HealthCheckEntry } from '../types'
-// import { TextField } from '../AddPatientModal/FormField'
 
-// type NewHealthCheckEntry = Omit<HealthCheckEntry, 'id'>
-
-// interface FormProps {
-// 	onSubmit: (formValues: NewHealthCheckEntry) => void
-// }
+interface FormProps {
+	onSubmit: (formValues: any) => void
+}
 
 // Formik wrapping your form can be seen as a context wrapper for your form to use
 
-const AddEntryForm = () => {
+const AddEntryForm = ({ onSubmit }: FormProps) => {
 	const [{ diagnoses }] = useStateValue()
 
 	return (
@@ -36,9 +32,7 @@ const AddEntryForm = () => {
 					criteria: '',
 				},
 			}}
-			onSubmit={(data) => {
-				console.log(data)
-			}}
+			onSubmit={onSubmit}
 			validate={(values) => {
 				const requiredError = 'Field is required'
 				const errors: { [field: string]: string } = {}

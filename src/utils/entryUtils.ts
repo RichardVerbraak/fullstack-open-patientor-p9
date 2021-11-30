@@ -237,7 +237,6 @@ const isDiagnosisCodes = (codes: any): codes is Array<Diagnosis['code']> => {
 }
 
 const parseDiagnosisCodes = (codes: unknown): Array<Diagnosis['code']> => {
-	console.log(codes)
 	if (!codes || !isDiagnosisCodes(codes)) {
 		throw new Error(`No codes`)
 	}
