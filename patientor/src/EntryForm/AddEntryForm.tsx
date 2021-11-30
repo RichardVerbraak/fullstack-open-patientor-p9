@@ -2,7 +2,8 @@ import React from 'react'
 import { Button } from 'semantic-ui-react'
 import { Formik, Form, Field } from 'formik'
 import { SelectEntryField, TextField } from './EntryFormFields'
-import { NumberField } from '../AddPatientModal/FormField'
+import { DiagnosisSelection, NumberField } from '../AddPatientModal/FormField'
+import { useStateValue } from '../state'
 // import { HealthCheckEntry } from '../types'
 // import { TextField } from '../AddPatientModal/FormField'
 
@@ -15,6 +16,8 @@ import { NumberField } from '../AddPatientModal/FormField'
 // Formik wrapping your form can be seen as a context wrapper for your form to use
 
 const AddEntryForm = () => {
+	const [{ diagnoses }] = useStateValue()
+
 	return (
 		<Formik
 			initialValues={{
@@ -28,35 +31,41 @@ const AddEntryForm = () => {
 				console.log(data)
 			}}
 		>
-			{({ values }) => {
+			{({ values, setFieldValue, setFieldTouched }) => {
 				return (
 					<Form className='form ui'>
-						<Field name='type' label='type' component={SelectEntryField} />
+						<Field name='type' label='Type' component={SelectEntryField} />
 
 						<Field
 							name='date'
-							label='date'
+							label='Dype'
 							placeholder='YYYY-MM-DD'
 							component={TextField}
 						/>
 
 						<Field
 							name='description'
-							label='description'
-							placeholder='description'
+							label='Description'
+							placeholder='Description'
 							component={TextField}
 						/>
 
 						<Field
 							name='specialist'
-							label='specialist'
-							placeholder='specialist'
+							label='Specialist'
+							placeholder='Specialist'
 							component={TextField}
+						/>
+
+						<DiagnosisSelection
+							setFieldValue={setFieldValue}
+							setFieldTouched={setFieldTouched}
+							diagnoses={Object.values(diagnoses)}
 						/>
 
 						{values.type === 'HealthCheck' && (
 							<Field
-								label='healthCheckRating'
+								label='Health Rating'
 								name='healthCheckRating'
 								component={NumberField}
 								min={0}
