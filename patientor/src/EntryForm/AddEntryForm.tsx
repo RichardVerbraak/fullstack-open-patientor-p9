@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Button } from 'semantic-ui-react'
 import { Formik, Form, Field } from 'formik'
 import { SelectEntryField, TextField } from './EntryFormFields'
@@ -26,6 +26,11 @@ const AddEntryForm = () => {
 				date: '',
 				specialist: '',
 				healthCheckRating: '',
+				employerName: '',
+				sickLeave: {
+					startDate: '',
+					endDate: '',
+				},
 			}}
 			onSubmit={(data) => {
 				console.log(data)
@@ -71,6 +76,31 @@ const AddEntryForm = () => {
 								min={0}
 								max={3}
 							/>
+						)}
+
+						{values.type === 'Occupational' && (
+							<Fragment>
+								<Field
+									label='Employer Name'
+									name='employerName'
+									placeholder='Employer name'
+									component={TextField}
+								/>
+
+								<h3>Sick Leave</h3>
+								<Field
+									label='Start Date'
+									name='sickLeave.startDate'
+									placeholder='YYYY-MM-DD'
+									component={TextField}
+								/>
+								<Field
+									label='End Date'
+									name='sickLeave.endDate'
+									placeholder='YYYY-MM-DD'
+									component={TextField}
+								/>
+							</Fragment>
 						)}
 
 						<div>
