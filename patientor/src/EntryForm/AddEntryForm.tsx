@@ -2,6 +2,7 @@ import React from 'react'
 import { Button } from 'semantic-ui-react'
 import { Formik, Form, Field } from 'formik'
 import { SelectEntryField, TextField } from './EntryFormFields'
+import { NumberField } from '../AddPatientModal/FormField'
 // import { HealthCheckEntry } from '../types'
 // import { TextField } from '../AddPatientModal/FormField'
 
@@ -17,7 +18,7 @@ const AddEntryForm = () => {
 	return (
 		<Formik
 			initialValues={{
-				type: '',
+				type: 'HealthCheck',
 				description: '',
 				date: '',
 				specialist: '',
@@ -27,15 +28,42 @@ const AddEntryForm = () => {
 				console.log(data)
 			}}
 		>
-			{() => {
+			{({ values }) => {
 				return (
 					<Form className='form ui'>
 						<Field name='type' label='type' component={SelectEntryField} />
+
+						<Field
+							name='date'
+							label='date'
+							placeholder='YYYY-MM-DD'
+							component={TextField}
+						/>
+
 						<Field
 							name='description'
 							label='description'
+							placeholder='description'
 							component={TextField}
 						/>
+
+						<Field
+							name='specialist'
+							label='specialist'
+							placeholder='specialist'
+							component={TextField}
+						/>
+
+						{values.type === 'HealthCheck' && (
+							<Field
+								label='healthCheckRating'
+								name='healthCheckRating'
+								component={NumberField}
+								min={0}
+								max={3}
+							/>
+						)}
+
 						<div>
 							<Button type='submit'>Add entry</Button>
 						</div>
