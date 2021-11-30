@@ -22,8 +22,8 @@ const AddEntryForm = () => {
 		<Formik
 			initialValues={{
 				type: 'HealthCheck',
-				description: '',
 				date: '',
+				description: '',
 				specialist: '',
 				healthCheckRating: '',
 				employerName: '',
@@ -31,12 +31,50 @@ const AddEntryForm = () => {
 					startDate: '',
 					endDate: '',
 				},
+				discharge: {
+					date: '',
+					criteria: '',
+				},
 			}}
 			onSubmit={(data) => {
 				console.log(data)
 			}}
+			validate={(values) => {
+				const requiredError = 'Field is required'
+				const errors: { [field: string]: string } = {}
+
+				if (!values.date) {
+					errors.date = requiredError
+				}
+
+				if (!values.description) {
+					errors.description = requiredError
+				}
+
+				if (!values.specialist) {
+					errors.specialist = requiredError
+				}
+
+				if (values.type === 'HealthCheck' && !values.healthCheckRating) {
+					errors.healthCheck = requiredError
+				}
+
+				if (values.type === 'Occupational' && !values.employerName) {
+					errors.employerName = requiredError
+				}
+
+				if (values.type === 'Hospital' && !values.discharge.date) {
+					errors.dischargeDate = requiredError
+				}
+
+				if (values.type === 'Hospital' && !values.discharge.criteria) {
+					errors.dischargeCriteria = requiredError
+				}
+
+				return errors
+			}}
 		>
-			{({ values, setFieldValue, setFieldTouched }) => {
+			{({ values, setFieldValue, setFieldTouched, isValid, dirty }) => {
 				return (
 					<Form className='form ui'>
 						<Field name='type' label='Type' component={SelectEntryField} />
@@ -103,8 +141,28 @@ const AddEntryForm = () => {
 							</Fragment>
 						)}
 
+						{values.type === 'Hospital' && (
+							<Fragment>
+								<h3>Discharge</h3>
+								<Field
+									label='Date'
+									name='discharge.date'
+									placeholder='YYYY-MM-DD'
+									component={TextField}
+								/>
+								<Field
+									label='Criteria'
+									name='discharge.criteria'
+									placeholder='criteria'
+									component={TextField}
+								/>
+							</Fragment>
+						)}
+
 						<div>
-							<Button type='submit'>Add entry</Button>
+							<Button type='submit' disabled={!isValid || !dirty}>
+								Add entry
+							</Button>
 						</div>
 					</Form>
 				)
