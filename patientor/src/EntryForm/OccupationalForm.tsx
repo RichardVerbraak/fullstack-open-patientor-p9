@@ -1,30 +1,34 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Button } from 'semantic-ui-react'
 import { Formik, Form, Field } from 'formik'
 import { TextField } from './EntryFormFields'
-import { DiagnosisSelection, NumberField } from '../AddPatientModal/FormField'
+import { DiagnosisSelection } from '../AddPatientModal/FormField'
 import { useStateValue } from '../state'
-import { HealthCheckEntry, HealthCheckRating } from '../types'
+import { OccupationalHealthCareEntry } from '../types'
 
-type newHealthCheckEntry = Omit<HealthCheckEntry, 'id'>
+type newOccupationalEntry = Omit<OccupationalHealthCareEntry, 'id'>
 
 interface FormProps {
-	onSubmit: (formValues: newHealthCheckEntry) => void
+	onSubmit: (formValues: newOccupationalEntry) => void
 }
 
 // Formik wrapping your form can be seen as a context wrapper for your form to use
 
-const HealthCheckForm = ({ onSubmit }: FormProps) => {
+const OccupationalForm = ({ onSubmit }: FormProps) => {
 	const [{ diagnoses }] = useStateValue()
 
 	return (
 		<Formik
 			initialValues={{
-				type: 'HealthCheck',
+				type: 'OccupationalHealthcare',
 				date: '',
 				description: '',
 				specialist: '',
-				healthCheckRating: HealthCheckRating.LowRisk,
+				employerName: '',
+				sickLeave: {
+					startDate: '',
+					endDate: '',
+				},
 			}}
 			onSubmit={onSubmit}
 			validate={(values) => {
@@ -43,8 +47,12 @@ const HealthCheckForm = ({ onSubmit }: FormProps) => {
 					errors.specialist = requiredError
 				}
 
-				if (!values.healthCheckRating) {
-					errors.healthCheck = requiredError
+				if (!values.employerName) {
+					errors.employerName = requiredError
+				}
+
+				if (!values.sickLeave?.startDate || !values.sickLeave.endDate) {
+					errors.discharge = requiredError
 				}
 
 				return errors
@@ -81,12 +89,27 @@ const HealthCheckForm = ({ onSubmit }: FormProps) => {
 						/>
 
 						<Field
-							label='Health Rating'
-							name='healthCheckRating'
-							component={NumberField}
-							min={0}
-							max={3}
+							name='employerName'
+							label='Employer Name'
+							placeholder='Employer Name'
+							component={TextField}
 						/>
+
+						<Fragment>
+							<h3>Sick Leave</h3>
+							<Field
+								name='sickLeave.startDate'
+								label='Start Date'
+								placeholder='YYYY-MM-DD'
+								component={TextField}
+							/>
+							<Field
+								name='sickLeave.endDate'
+								label='End Date'
+								placeholder='YYYY-MM-DD'
+								component={TextField}
+							/>
+						</Fragment>
 
 						<div>
 							<Button type='submit' disabled={!isValid || !dirty}>
@@ -100,4 +123,4 @@ const HealthCheckForm = ({ onSubmit }: FormProps) => {
 	)
 }
 
-export default HealthCheckForm
+export default OccupationalForm
