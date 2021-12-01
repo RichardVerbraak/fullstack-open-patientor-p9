@@ -1,5 +1,5 @@
 import React from 'react'
-import { Field, FieldProps } from 'formik'
+import { ErrorMessage, Field, FieldProps } from 'formik'
 import { Form } from 'semantic-ui-react'
 
 // FieldProps are all the props passed to a Formik Field (handleChange, handleBlur, value, placeholder etc.)
@@ -17,6 +17,9 @@ const TextField = ({ label, placeholder, field }: TextInput) => {
 		<Form.Field>
 			<label>{label}</label>
 			<Field placeholder={placeholder} {...field} />
+			<div style={{ color: 'red' }}>
+				<ErrorMessage name={field.name} />
+			</div>
 		</Form.Field>
 	)
 }
