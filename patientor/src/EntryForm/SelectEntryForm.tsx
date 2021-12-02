@@ -10,7 +10,7 @@ const SelectEntryForm = ({ id }: { id: string }) => {
 	const [type, setType] = useState('HealthCheck')
 
 	// Change form values type
-	const submitNewEntry = async (formValues: any) => {
+	const submitNewEntry = async (formValues: NewEntry) => {
 		try {
 			console.log(formValues)
 
