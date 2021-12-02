@@ -39,7 +39,7 @@ const addNewPatient = (patient: Patient): Patient => {
 }
 
 // Find patient => add entry => return the entry
-const addNewEntry = (id: string, entry: Entry): Entry => {
+const addNewEntry = (id: string, entry: Entry): Patient => {
 	const foundPatient = patients.find((patient) => {
 		return patient.id === id
 	})
@@ -48,12 +48,7 @@ const addNewEntry = (id: string, entry: Entry): Entry => {
 		foundPatient.entries.push(entry)
 	}
 
-	// Still need to update the patient in the patient array
-	// {...patient, foundPatient}
-
-	console.log(foundPatient)
-
-	return entry
+	return foundPatient as Patient
 }
 
 export {

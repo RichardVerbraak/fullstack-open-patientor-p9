@@ -4,25 +4,23 @@ import { apiBaseUrl } from '../constants'
 import HealthCheckForm from '../EntryForm/HealthCheckForm'
 import HospitalForm from '../EntryForm/HospitalForm'
 import OccupationalForm from '../EntryForm/OccupationalForm'
-import { NewEntry } from '../types'
+import { setSinglePatient, useStateValue } from '../state'
+import { NewEntry, Patient } from '../types'
 
 const SelectEntryForm = ({ id }: { id: string }) => {
 	const [type, setType] = useState('HealthCheck')
+	const [, dispatch] = useStateValue()
 
-	// Change form values type
 	const submitNewEntry = async (formValues: NewEntry) => {
 		try {
-			console.log(formValues)
-
-			// Destructure
-			const { data } = await axios.post<NewEntry>(
+			// Post the new entry and return the patient with the updated entries
+			const { data } = await axios.post<Patient>(
 				`${apiBaseUrl}/patients/${id}/entries`,
 				formValues
 			)
 
-			console.log(data)
-
-			// dispatch the data to the state to render the new entry on the patient
+			// Update the patient in state (triggers re-render)
+			dispatch(setSinglePatient(data))
 		} catch (error) {
 			// Pass error down to the form later on?
 			console.log(error)
